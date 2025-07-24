@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>SEARCH4U - Sign Up</title>
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+	<style>
+		body {
+			background: linear-gradient(to right, #232526, #414345);
+			color: #fff;
+			height: 100vh;
+			font-family: Arial, sans-serif;
+		}
+
+		.navbar {
+			background-color: #000 !important;
+		}
+
+		.navbar-brand,
+		.nav-link {
+			color: #fff !important;
+			font-weight: bold;
+		}
+
+		.navbar-brand:hover,
+		.nav-link:hover {
+			color: #00cc66 !important;
+		}
+
+		.signup-container {
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			height: calc(100vh - 56px);
+		}
+
+		.signup-box {
+			background: rgba(0, 0, 0, 0.8);
+			padding: 30px;
+			border-radius: 15px;
+			width: 100%;
+			max-width: 800px;
+		}
+
+		.signup-box h2 {
+			text-align: center;
+			margin-bottom: 30px;
+			font-weight: 700;
+		}
+
+		.form-control {
+			background-color: #333;
+			border: none;
+			color: #fff;
+		}
+
+		.form-control::placeholder {
+			color: #aaa;
+		}
+
+		.btn-custom {
+			background-color: #28a745;
+			border: none;
+			font-weight: bold;
+		}
+
+		.btn-custom:hover {
+			background-color: #218838;
+		}
+	</style>
+</head>
+
+<body>
+	<!-- Navbar -->
+	<nav class="navbar navbar-expand-lg navbar-dark navbar-custom">
+		<a class="navbar-brand" href="#">SEARCH4U</a>
+		<div class="ml-auto">
+			<a class="nav-link d-inline" href="/">HOME</a>
+			<a class="nav-link d-inline" href="javascript:history.back()">GO BACK</a>
+		</div>
+	</nav>
+
+	<!-- Signup Form -->
+	<div class="signup-container">
+		<div class="signup-box">
+			<h2>Create Account</h2>
+			<form action="/save" method="post">
+				<div class="form-row">
+					 
+
+					<div class="form-group col-md-6">
+						<label for="name">Full Name</label>
+						<input type="text" class="form-control" id="name" name="name" placeholder="Enter your full name" required>
+					</div>
+
+					<div class="form-group col-md-6">
+						<label for="username">Email / Username</label>
+						<input type="text" class="form-control" id="username" name="username" placeholder="Enter your username" required>
+					</div>
+
+					<div class="form-group col-md-6">
+						<label for="address">Address</label>
+						<textarea class="form-control" id="address" name="address" rows="1" placeholder="Enter your address" required></textarea>
+					</div>
+
+					<div class="form-group col-md-6">
+						<label for="password">Password</label>
+						<input type="text" class="form-control" id="password" name="password" placeholder="Enter your password" required>
+					</div>
+
+					<div class="form-group col-md-6">
+						<label for="balance">Opening Balance</label>
+						<input type="number" class="form-control" id="balance" name="balance" placeholder="Enter opening balance" required>
+					</div>
+				</div>
+
+				<div class="text-center mt-4">
+					<button type="submit" class="btn btn-custom px-5">Sign Up</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</body>
+
+</html>

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="ISO-8859-1">
+<title>Search user Account</title>
+
+<style>
+ body{
+        
+        background-color: aqua;
+        text-align: center;
+        
+    }
+</style>
+</head>
+<body>
+	<form>
+		<h1>
+			<p th:text=${msg2} />
+		</h1>
+		<h2>User Details</h2>
+		 
+          
+		 <table border="1" style="width: 600px">
+
+		<tr>
+			 
+			<td>Account No</td>
+			<td>Name</td>
+			<td>Address</td>
+			<td>Balance</td>
+			<td>User Name</td> 
+
+
+		</tr>
+		<tr th:each="account : ${account}">
+		
+			<td th:text="${account.anumber}"></td>
+			<td th:text="${account.name}"></td>
+			<td th:text="${account.address}"></td>
+			<td th:text="${account.balance}"></td>
+			<td th:text="${account.username}"></td>
+			
+			 
+
+		 
+
+	</table>
+		<br>
+		<br>
+		<br>
+		<br>
+		<br>
+		<br>
+		<br>
+		<br>
+		<br>
+		<br>
+		<br>
+		<br>
+		<br>
+		<br>
+		<br>
+		<br>
+		<br>
+		<br>
+		<br>
+		 <br><br>
+		 
+		 <a href="javascript:history.back()">Go Back</a>
+		<div>
+			Return to Home page <a href="/wellcomecontorller/home">Click here</a>
+		</div>
+
+	</form>
+
+
+</body>
+</html>

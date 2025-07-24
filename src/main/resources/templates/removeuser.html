@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Enter Account Number</title>
+    <style>
+        body {
+            background: url('/Welcome.jpg') no-repeat center center fixed;
+            text-align: center;
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        form {
+            background-color: aliceblue;
+            max-width: 400px;
+            width: 100%;
+            border-radius: 20px;
+            padding: 20px;
+        }
+
+        input {
+            width: calc(100% - 22px);
+            padding: 10px;
+            margin-top: 10px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        button {
+            background-color: #f90a0a;
+            color: white;
+            padding: 12px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 20px;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background-color: #ec1d21;
+        }
+
+        a {
+            color: #333;
+            text-decoration: none;
+            display: block;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    
+    <form action="/removed" method="get">
+        <h1>Enter Account Number</h1>
+        <input type="text" id="anumber" name="anumber" required placeholder="Enter Account Number">
+        <br>
+        <button type="submit">Remove</button>
+        <a href="javascript:history.back()">Go Back</a>
+
+    </form>
+</body>
+</html>

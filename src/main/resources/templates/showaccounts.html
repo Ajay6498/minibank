@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Insert title here</title>
+<style>
+ body{
+        
+        background-color: aqua;
+         
+    }
+</style>
+</head>
+<body>
+<form>
+<h1>All Accounts</h1>
+
+	<table border="1" style="width: 600px">
+
+		<tr>
+		 
+ 			<td>Account No</td>
+			<td>Name</td>
+			<td>Address</td>
+			<td>Balance</td>
+			<td>User Name</td> 
+			 
+
+
+		</tr>
+		    <tr th:each="account : ${account}">
+			<td th:text="${account.anumber}"></td>
+			<td th:text="${account.name}"></td>
+			<td th:text="${account.address}"></td>
+			<td th:text="${account.balance}"></td>
+			<td th:text="${account.username}"></td>
+			
+			 
+
+		</tr>
+
+	</table>
+	<br>
+	<div>
+		Create Account <a href="create">Click here</a>
+	</div>
+	
+	
+	 
+
+</form>
+
+<a href="javascript:history.back()">Go Back</a>
+</body>
+</html>

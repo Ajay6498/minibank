@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Transfer Form</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            background: url('/bg.jpg') no-repeat center center fixed;
+            background-size: cover;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        .form-container {
+            max-width: 500px;
+            margin: 80px auto;
+            padding: 30px;
+            background-color: rgb(128, 128, 128);
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px #00000050;
+        }
+
+        h2 {
+            text-align: center;
+            color: #007bff;
+            margin-bottom: 20px;
+        }
+
+        label {
+            font-weight: bold;
+        }
+
+        .form-control {
+            margin-bottom: 15px;
+        }
+
+        .btn-primary {
+            width: 100%;
+        }
+
+        .message {
+            text-align: center;
+            font-weight: bold;
+            color: green;
+        }
+
+        nav.navbar {
+            background-color: #343a40;
+        }
+
+        nav.navbar a.nav-link {
+            color: white !important;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-dark">
+    <a class="navbar-brand" href="/">SEARCH4U</a>
+    <div class="ml-auto">
+        <a class="nav-link d-inline" href="/">Home</a>
+        <a class="nav-link d-inline" href="javascript:history.back()">Go Back</a>
+        <a class="nav-link d-inline" href="/userlogin">Logout</a>
+ 
+    </div>
+</nav>
+
+<!-- Transfer Form -->
+<div class="form-container">
+    <h2>Transfer Money</h2>
+    <p class="message" th:text="${message}"></p>
+
+    <form th:action="@{/transfer}" method="post">
+       
+
+        <div class="form-group">
+            <label for="targetAccountNo">Target Account Number:</label>
+            <input type="text" class="form-control" id="targetAccountNo" name="targetAccountNo" placeholder="Enter Target Account No" required>
+        </div>
+
+        <div class="form-group">
+            <label for="amount">Amount:</label>
+            <input type="text" class="form-control" id="amount" name="amount" placeholder="Enter Amount" required>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Transfer</button>
+    </form>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

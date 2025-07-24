@@ -1,0 +1,27 @@
+ 
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="ISO-8859-1">>
+    <title>Deposit Result</title>
+    <style>
+ body{
+        
+        background-color: aqua;
+        text-align: center;
+        
+    }
+</style>
+</head>
+<body>
+    <h2>Deposit Result</h2>
+    <div th:if="${deposit.contains('successful')}" class="success-message">
+        <p th:text="${deposit}"></p>
+    </div>
+    <div th:unless="${deposit.contains('successful')}" class="error-message">
+        <p th:text="${deposit}"></p>
+    </div>
+    
+    <a href="javascript:history.back()">Go Back</a>
+ </body>
+</html>

@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="ISO-8859-1">
+    <title>Deposit Form</title>
+    <style>
+        body {
+            background-color: rgb(128, 128, 128);
+            text-align: center;
+            font-family: Arial, sans-serif;
+            margin: 0;
+        }
+
+        nav {
+            background-color: #333;
+            padding: 10px;
+            text-align: right;
+        }
+
+        nav a {
+            color: white;
+            margin: 0 15px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        nav a:hover {
+            text-decoration: underline;
+        }
+
+        form {
+            margin-top: 30px;
+        }
+
+        input, button {
+            padding: 10px;
+            margin: 10px;
+            width: 200px;
+            font-size: 16px;
+        }
+
+        button {
+            background-color: #28a745;
+            color: white;
+            border: none;
+        }
+
+        button:hover {
+            background-color: #218838;
+        }
+
+        .message {
+            color: darkgreen;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navbar -->
+    <nav>
+        <a th:href="@{/#}">Home</a>
+        <a th:href="@{/depositform}">Deposit</a>
+        <a th:href="@{/withdrawform}">Withdraw</a>
+        <a th:href="@{/transferfrom}">Transfer</a>
+        <a th:href="@{/logout}">Logout</a>
+    </nav>
+
+    <h2>Deposit Form</h2>
+
+    <p class="message" th:text="${msg}"></p>
+    <p class="message" th:text="${depositResult}"></p>
+
+    <form th:action="@{/deposit}" method="post" th:object="${deposit}">
+        <input type="text" id="anumber" name="anumber" required placeholder="Enter Account Number">
+        <input type="text" id="amount" name="amount" required placeholder="Enter Amount">
+        <button type="submit">Deposit</button>
+    </form>
+
+    <a href="javascript:history.back()">Go Back</a>
+
+</body>
+</html>

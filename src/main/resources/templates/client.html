@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Our Client Roster</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(to right, #fff3b0, #ffc9de, #f5c6ff);
+    }
+
+    /* Navbar Styles */
+    .navbar {
+      background-color: #333;
+      overflow: hidden;
+    }
+
+    .navbar a {
+      float: left;
+      display: block;
+      color: white;
+      text-align: center;
+      padding: 14px 20px;
+      text-decoration: none;
+    }
+
+    .navbar a:hover {
+      background-color: #575757;
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 2.8em;
+      margin-top: 30px;
+    }
+
+    p.subtitle {
+      text-align: center;
+      font-size: 1.1em;
+      color: #333;
+      max-width: 700px;
+      margin: 0 auto 40px;
+    }
+
+    .clients {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 30px;
+      padding-bottom: 50px;
+    }
+
+    .client-card {
+      width: 300px;
+      background: #000;
+      color: white;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+      transition: transform 0.3s ease;
+    }
+
+    .client-card:hover {
+      transform: scale(1.03);
+    }
+
+    .client-card img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+    }
+
+    .client-name {
+      padding: 15px;
+      font-weight: bold;
+      font-size: 1.1em;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <div class="navbar">
+    <a th:href="@{/}">Home</a>
+    <a th:href="@{/register}">Register</a>
+    <a th:href="@{/login}">Login</a>
+    <a th:href="@{/transferfrom}">Transfer</a>
+    <a th:href="@{/clients}">Clients</a>
+  </div>
+
+  <!-- Main Content -->
+  <h1>Our Client Roster</h1>
+  <p class="subtitle">
+    From our early days, we've been providing reliable service to our clientele.
+    We've had the honor of being the firm of choice of the following corporations:
+  </p>
+
+  <div class="clients">
+    <div class="client-card">
+      <img src="/Welcome.jpg" alt="Belden Bank">
+      <div class="client-name">Belden Bank LTD</div>
+    </div>
+
+    <div class="client-card">
+      <img src="/bg.jpg" alt="Michaelson Digital">
+      <div class="client-name">Michaelson Digital</div>
+    </div>
+
+    <div class="client-card">
+      <img src="https://images.unsplash.com/photo-1596578882113-b3f2c7e5bb7e?fit=crop&w=800&q=80" alt="Perlanton Securities">
+      <div class="client-name">Perlanton Securities</div>
+    </div>
+  </div>
+
+</body>
+</html>
