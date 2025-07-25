@@ -223,7 +223,7 @@ public class AccountServiceImpl implements AccountService {
 	@Override
 	public Double getBalance(Long anumber) {
 		// TODO Auto-generated method stub
-		Account account = repository.getById(anumber);
+		Account account = repository.getReferenceById(anumber);
 
 		return account.getBalance();
 	}

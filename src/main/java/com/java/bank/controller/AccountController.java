@@ -1,10 +1,10 @@
 package com.java.bank.controller;
 
 import java.awt.Color;
+import java.io.IOException;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.Optional;
-
+ 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -34,9 +34,7 @@ import com.lowagie.text.pdf.PdfWriter;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import jakarta.transaction.Transaction;
-import jakarta.websocket.Session;
-import jakarta.websocket.server.PathParam;
+ 
 
 @Controller
 public class AccountController {
@@ -92,9 +90,11 @@ public class AccountController {
 
 				String usermsg = "Hi " + account.getName() + "...!";
 				String balance = "Your Current Balance: " + account.getBalance();
+				String anumber = "Account Number : " + account.getAnumber();
 
 				model.addAttribute("usermsg", usermsg);
 				model.addAttribute("balance", balance);
+				model.addAttribute("anumber", anumber);
 
 				return "userdashbord";
 
@@ -148,7 +148,7 @@ public class AccountController {
 		return "login";
 	}
 
-	// ****************************************************************************************
+	// ***************************************************************************************
 
 	@GetMapping("/getbyid")
 	public String getIdForm() {
@@ -314,7 +314,7 @@ public class AccountController {
 		return "contact";
 	}
 
-	//////////// *****************************************************************
+	// *****************************************************************
 
 	@GetMapping("/logout")
 	public String logout(HttpServletRequest request, HttpServletResponse response) {
@@ -333,21 +333,26 @@ public class AccountController {
 	//******************************************************************************
 	
 	@GetMapping("/download-statement")
-	public void downloadStatement(HttpServletResponse response, HttpSession session) throws IOException, DocumentException, java.io.IOException {
+	public void downloadStatement(HttpServletResponse response, HttpSession session) throws IOException, DocumentException {
 	    response.setContentType("application/pdf");
 	    response.setHeader("Content-Disposition", "attachment; filename=bank-statement.pdf");
 
-	    // List<Transaction> transactions = transactionService.getAllTransactions();
-	    
-		Long sourceAccountNo = (Long) session.getAttribute("loggedInAccountNo");
-		
-		
+	    Long sourceAccountNo = (Long) session.getAttribute("loggedInAccountNo");
 
-	    List<Transactions> transactions=asi.getTransactionsByAccountNo(sourceAccountNo);
-	    
+	    List<Transactions> transactions = asi.getTransactionsByAccountNo(sourceAccountNo);
+
+	    // ✅ Fetch actual account from database
+	    Account account = asi.getByAccountNo(sourceAccountNo);
 
 	    Document document = new Document(PageSize.A4);
-	    PdfWriter.getInstance(document, response.getOutputStream());
+	    try {
+			PdfWriter.getInstance(document, response.getOutputStream());
+		} catch (DocumentException e) {
+ 			e.printStackTrace();
+		} catch (java.io.IOException e) {
+			 
+			e.printStackTrace();
+		}
 
 	    document.open();
 
@@ -356,6 +361,19 @@ public class AccountController {
 	    title.setAlignment(Element.ALIGN_CENTER);
 	    document.add(title);
 	    document.add(new Paragraph(" ")); // spacer
+
+	    // Account Info Section 
+	    Font infoFont = FontFactory.getFont(FontFactory.HELVETICA, 12);
+	    Paragraph accountInfo = new Paragraph(
+	        "Account Number : " + account.getAnumber() + "\n" +
+	        "Account Holder : " + account.getName() + "\n" +
+	        "Username       : " + account.getUsername() + "\n" +
+	        "Address        : " + account.getAddress() + "\n" +
+	        "Balance        : ₹" + account.getBalance(),
+	        infoFont
+	    );
+	    accountInfo.setSpacingAfter(10f);
+	    document.add(accountInfo);
 
 	    PdfPTable table = new PdfPTable(6);
 	    table.setWidthPercentage(100f);
@@ -368,6 +386,7 @@ public class AccountController {
 	    document.add(table);
 	    document.close();
 	}
+
 
 	private void writeTableHeader(PdfPTable table) {
 	    PdfPCell cell = new PdfPCell();
@@ -405,6 +424,7 @@ public class AccountController {
 	        table.addCell(String.valueOf(txn.getAmount()));
 	        table.addCell(txn.getMsg());
 	        table.addCell(String.valueOf(txn.getCurrentBalance()));
+	        
 	    }
 	}
 

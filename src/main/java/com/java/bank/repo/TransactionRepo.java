@@ -6,8 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import com.java.bank.entity.Account;
-import com.java.bank.entity.Transactions;
+ import com.java.bank.entity.Transactions;
 
 public interface TransactionRepo extends JpaRepository<Transactions, Long> {
 	
