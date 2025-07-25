@@ -29,26 +29,59 @@ public class AccountServiceImpl implements AccountService {
 
 	 @Autowired
 	 private TransactionRepo transactionRepo;
+	 
+	 Transactions t= new Transactions();
+ 
+//	@Override
+//	@Transactional
+//	public String createAccount(Account account) {
+//		repository.save(account);
+//		Transactions transaction = new Transactions();
+//	    LocalDateTime currentDateTime= LocalDateTime.now();
+//	    
+//	    
+//	    // Transaction saving code
+//	    transaction.setAnumber(account.getAnumber());
+//	    transaction.setType("Opening DEPOSIT");
+//	    transaction.setAmount(account.getBalance());
+//	    transaction.setLocalDateTime(currentDateTime);
+//	    transaction.setMsg("Opning Bal");
+//	    transaction.setCurrentBalance(account.getBalance());
+//	    transactionRepo.save(transaction);
+//	    
+//		return "created";
+//	}
 
-	@Override
-	@Transactional
-	public String createAccount(Account account) {
-		repository.save(account);
-		Transactions transaction = new Transactions();
-	    LocalDateTime currentDateTime= LocalDateTime.now();
-	    
-	    
-	    // Transaction saving code
-	    transaction.setAnumber(account.getAnumber());
-	    transaction.setType("Opening DEPOSIT");
-	    transaction.setAmount(account.getBalance());
-	    transaction.setLocalDateTime(currentDateTime);
-	    transaction.setMsg("Opning Bal");
-	    transaction.setCurrentBalance(account.getBalance());
-	    transactionRepo.save(transaction);
-	    
-		return "created";
-	}
+	 @Override
+	 @Transactional
+	 public String createAccount(Account account) {
+
+	     // Ensure balance is not null
+	     if (account.getBalance() == null) {
+	         account.setBalance(0.0);
+	     }
+
+	     // Save the account
+	     repository.save(account);
+
+	     // Create and save the opening transaction
+         String txnId = t.getTxnId(); // e.g., TXN00012345
+
+	     Transactions transaction = new Transactions();
+	     transaction.setTxnId( txnId);
+	     transaction.setAnumber(account.getAnumber());
+	     transaction.setFromAccount(null); // no source account for opening deposit
+	     transaction.setToAccount(account.getAnumber());
+	     transaction.setType("Credit"); // Opening deposit is a credit
+	     transaction.setAmount(account.getBalance());
+	     transaction.setLocalDateTime(LocalDateTime.now());
+	     transaction.setMsg("Opening Balance");
+	     transaction.setCurrentBalance(account.getBalance());
+
+	     transactionRepo.save(transaction);
+
+	     return "Account created successfully.";
+	 }
 
 //**************************************************************************************************
 
@@ -78,144 +111,288 @@ public class AccountServiceImpl implements AccountService {
 	 * return null; }
 	 */
 
+//	@Transactional
+//	@Override
+//	public String deposit(Long anumber, double amount) {
+//
+//	    
+//
+//		// Retrieve the account from the database using its ID
+//		Optional<Account> optionalAccount = repository.findById(anumber);
+//
+//		if (optionalAccount.isPresent()) {
+//			Account account = optionalAccount.get();
+//
+//			// Perform the deposit operation
+//			double currentBalance = account.getBalance();
+//			double newBalance = currentBalance + amount;
+//			account.setBalance(newBalance);
+//
+//			// Save the updated account back to the database
+//			repository.save(account);
+//			
+//			
+//			Transactions transaction = new Transactions();
+//		    LocalDateTime currentDateTime= LocalDateTime.now();
+//		    transaction.setAnumber(anumber);
+//		    transaction.setType("DEPOSIT");
+//		    transaction.setAmount(amount);
+//		    transaction.setLocalDateTime(currentDateTime);
+//		    transaction.setMsg("by Cash");
+//		    transaction.setCurrentBalance(currentBalance);
+//		    transactionRepo.save(transaction);
+//
+//			// Return a success message or any relevant information
+//			return "Deposit successful. New balance: " + newBalance;
+//		} else {
+//			// Handle the case where the account with the given ID is not found
+//			return "Account not found with ID: " + anumber;
+//		}
+//	}
+
 	@Transactional
 	@Override
 	public String deposit(Long anumber, double amount) {
 
-	    
+	    Optional<Account> optionalAccount = repository.findById(anumber);
 
-		// Retrieve the account from the database using its ID
-		Optional<Account> optionalAccount = repository.findById(anumber);
+	    if (optionalAccount.isPresent()) {
+	        Account account = optionalAccount.get();
 
-		if (optionalAccount.isPresent()) {
-			Account account = optionalAccount.get();
+	        // Perform the deposit operation
+	        double currentBalance = account.getBalance();
+	        double newBalance = currentBalance + amount;
+	        account.setBalance(newBalance);
 
-			// Perform the deposit operation
-			double currentBalance = account.getBalance();
-			double newBalance = currentBalance + amount;
-			account.setBalance(newBalance);
+	        // Save the updated account
+	        repository.save(account);
 
-			// Save the updated account back to the database
-			repository.save(account);
-			
-			
-			Transactions transaction = new Transactions();
-		    LocalDateTime currentDateTime= LocalDateTime.now();
-		    transaction.setAnumber(anumber);
-		    transaction.setType("DEPOSIT");
-		    transaction.setAmount(amount);
-		    transaction.setLocalDateTime(currentDateTime);
-		    transaction.setMsg("by Cash");
-		    transaction.setCurrentBalance(currentBalance);
-		    transactionRepo.save(transaction);
+	        // Create and save the transaction
+            String txnId = t.getTxnId(); // e.g., TXN00012345
 
-			// Return a success message or any relevant information
-			return "Deposit successful. New balance: " + newBalance;
-		} else {
-			// Handle the case where the account with the given ID is not found
-			return "Account not found with ID: " + anumber;
-		}
+	        Transactions transaction = new Transactions();
+	        transaction.setTxnId(txnId);
+	        transaction.setAnumber(anumber);
+	        transaction.setFromAccount(null); // Deposits may not have a source account
+	        transaction.setToAccount(anumber);
+	        transaction.setType("Credit");
+	        transaction.setAmount(amount);
+	        transaction.setLocalDateTime(LocalDateTime.now());
+	        transaction.setMsg("Deposit by Cash to " );
+	        transaction.setCurrentBalance(newBalance); // store updated balance, not old one
+
+	        transactionRepo.save(transaction);
+
+	        return "Deposit successful. New balance: ₹" + newBalance;
+	    } else {
+	        return "Account not found with account number: " + anumber;
+	    }
 	}
 
 //**************************************************************************************************
+
+//	@Transactional
+//	@Override
+//	public String withdraw(Long anumber, double amount) {
+//		Optional<Account> optionalAccount = repository.findById(anumber);
+////	    
+//	   
+//
+//		if (optionalAccount.isPresent()) {
+//			Account account = optionalAccount.get();
+//
+//			// Check if there is sufficient balance for withdrawal
+//			double currentBalance = account.getBalance();
+//			if (currentBalance >= amount) {
+//				// Perform the withdrawal operation
+//				double newBalance = currentBalance - amount;
+//				account.setBalance(newBalance);
+//
+//				// Save the updated account back to the database
+//				repository.save(account);
+//				
+//				 Transactions transaction = new Transactions();
+//				    
+//				    LocalDateTime currentDateTime= LocalDateTime.now();
+//				    transaction.setAnumber(anumber);
+//			        transaction.setType("WITHDRAW");
+//			        transaction.setAmount(amount);
+//			        transaction.setLocalDateTime(currentDateTime);
+//			        transaction.setMsg("Withdraw by local ATM");
+//			        transaction.setCurrentBalance(newBalance);
+//			        transactionRepo.save(transaction);
+//
+//				// Return a success message or any relevant information
+//				return "Withdrawal successful. New balance: " + newBalance;
+//			} else {
+//				// Return an error message if there is insufficient balance
+//				return "Insufficient balance for withdrawal. Current balance: " + currentBalance;
+//			}
+//		} else {
+//			// Handle the case where the account with the given ID is not found
+//			return "Account not found with ID: " + anumber;
+//		}
+//	}
 
 	@Transactional
 	@Override
 	public String withdraw(Long anumber, double amount) {
-		Optional<Account> optionalAccount = repository.findById(anumber);
-//	    
-	   
+	    Optional<Account> optionalAccount = repository.findById(anumber);
 
-		if (optionalAccount.isPresent()) {
-			Account account = optionalAccount.get();
+	    if (optionalAccount.isPresent()) {
+	        Account account = optionalAccount.get();
 
-			// Check if there is sufficient balance for withdrawal
-			double currentBalance = account.getBalance();
-			if (currentBalance >= amount) {
-				// Perform the withdrawal operation
-				double newBalance = currentBalance - amount;
-				account.setBalance(newBalance);
+	        double currentBalance = account.getBalance();
+	        if (currentBalance >= amount) {
+	            // Deduct amount
+	            double newBalance = currentBalance - amount;
+	            account.setBalance(newBalance);
 
-				// Save the updated account back to the database
-				repository.save(account);
-				
-				 Transactions transaction = new Transactions();
-				    
-				    LocalDateTime currentDateTime= LocalDateTime.now();
-				    transaction.setAnumber(anumber);
-			        transaction.setType("WITHDRAW");
-			        transaction.setAmount(amount);
-			        transaction.setLocalDateTime(currentDateTime);
-			        transaction.setMsg("Withdraw by local ATM");
-			        transaction.setCurrentBalance(newBalance);
-			        transactionRepo.save(transaction);
+	            // Save updated account
+	            repository.save(account);
 
-				// Return a success message or any relevant information
-				return "Withdrawal successful. New balance: " + newBalance;
-			} else {
-				// Return an error message if there is insufficient balance
-				return "Insufficient balance for withdrawal. Current balance: " + currentBalance;
-			}
-		} else {
-			// Handle the case where the account with the given ID is not found
-			return "Account not found with ID: " + anumber;
-		}
+	            // Create transaction record
+	            String txnId = t.getTxnId(); // e.g., TXN00012345
+
+	            Transactions transaction = new Transactions();
+	            transaction.setTxnId(txnId);
+	            transaction.setAnumber(anumber);
+	            transaction.setFromAccount(anumber);
+	            transaction.setToAccount(null); // Withdrawal doesn't have a target account
+	            transaction.setType("Debit");
+	            transaction.setAmount(amount);
+	            transaction.setLocalDateTime(LocalDateTime.now());
+	            transaction.setMsg("Withdrawal via ATM");
+	            transaction.setCurrentBalance(newBalance);
+
+	            transactionRepo.save(transaction);
+
+	            return "Withdrawal successful. New balance: ₹" + newBalance;
+	        } else {
+	            return "Insufficient balance. Current balance: ₹" + currentBalance;
+	        }
+	    } else {
+	        return "Account not found with account number: " + anumber;
+	    }
 	}
 
 //**************************************************************************************************
 
+//	@Transactional
+//	@Override
+//	public String transfer(Long sourceAccountNo, Long targetAccountNo, double amount) {
+//		// Retrieve the source and target accounts from the database
+//		Optional<Account> optionalSourceAccount = repository.findById(sourceAccountNo);
+//		Optional<Account> optionalTargetAccount = repository.findById(targetAccountNo);
+//
+//	    
+//        
+//
+//		if (optionalSourceAccount.isPresent() && optionalTargetAccount.isPresent()) {
+//			Account sourceAccount = optionalSourceAccount.get();
+//			Account targetAccount = optionalTargetAccount.get();
+//
+//			// Check if the source account has sufficient balance for the transfer
+//			double sourceBalance = sourceAccount.getBalance();
+//			if (sourceBalance >= amount) {
+//				// Perform the transfer
+//				double newSourceBalance = sourceBalance - amount;
+//				sourceAccount.setBalance(newSourceBalance);
+//
+//				double targetBalance = targetAccount.getBalance();
+//				double newTargetBalance = targetBalance + amount;
+//				targetAccount.setBalance(newTargetBalance);
+//
+//				// Save the updated accounts back to the database
+//				repository.save(sourceAccount);
+//				repository.save(targetAccount);
+//				
+//				Transactions transaction = new Transactions();
+//			    LocalDateTime currentDateTime= LocalDateTime.now();
+//			    transaction.setAnumber(sourceAccountNo);
+//
+//		        transaction.setType("TRANSFER");
+//		        transaction.setAmount(amount);
+//		        transaction.setLocalDateTime(currentDateTime);
+//		        transaction.setMsg("Transfer to " + targetAccountNo);
+//		        transaction.setCurrentBalance(newSourceBalance);
+//		        transactionRepo.save(transaction);
+//
+//				// Return a success message or any relevant information
+//				return "Transfer successful. "
+//						+ "New balance in source account: " + newSourceBalance;
+//			} else {
+//				// Return an error message if the source account has insufficient balance
+//				return "Insufficient balance in source account for transfer. "
+//						+ "Current balance: " + sourceBalance;
+//			}
+//		} else {
+//			// Handle the case where either the source or target account is not found
+//			return "Source or target account not found.";
+//		}
+//	}
+
 	@Transactional
 	@Override
 	public String transfer(Long sourceAccountNo, Long targetAccountNo, double amount) {
-		// Retrieve the source and target accounts from the database
-		Optional<Account> optionalSourceAccount = repository.findById(sourceAccountNo);
-		Optional<Account> optionalTargetAccount = repository.findById(targetAccountNo);
+	    Optional<Account> optionalSourceAccount = repository.findById(sourceAccountNo);
+	    Optional<Account> optionalTargetAccount = repository.findById(targetAccountNo);
 
-	    
-        
+	    if (optionalSourceAccount.isPresent() && optionalTargetAccount.isPresent()) {
+	        Account sourceAccount = optionalSourceAccount.get();
+	        Account targetAccount = optionalTargetAccount.get();
 
-		if (optionalSourceAccount.isPresent() && optionalTargetAccount.isPresent()) {
-			Account sourceAccount = optionalSourceAccount.get();
-			Account targetAccount = optionalTargetAccount.get();
+	        double sourceBalance = sourceAccount.getBalance();
+	        if (sourceBalance >= amount) {
 
-			// Check if the source account has sufficient balance for the transfer
-			double sourceBalance = sourceAccount.getBalance();
-			if (sourceBalance >= amount) {
-				// Perform the transfer
-				double newSourceBalance = sourceBalance - amount;
-				sourceAccount.setBalance(newSourceBalance);
+	            // Update balances
+	            double newSourceBalance = sourceBalance - amount;
+	            double newTargetBalance = targetAccount.getBalance() + amount;
+	            sourceAccount.setBalance(newSourceBalance);
+	            targetAccount.setBalance(newTargetBalance);
 
-				double targetBalance = targetAccount.getBalance();
-				double newTargetBalance = targetBalance + amount;
-				targetAccount.setBalance(newTargetBalance);
+	            // Save accounts
+	            repository.save(sourceAccount);
+	            repository.save(targetAccount);
 
-				// Save the updated accounts back to the database
-				repository.save(sourceAccount);
-				repository.save(targetAccount);
-				
-				Transactions transaction = new Transactions();
-			    LocalDateTime currentDateTime= LocalDateTime.now();
-			    transaction.setAnumber(sourceAccountNo);
+	            // Common data
+ 	            LocalDateTime currentDateTime = LocalDateTime.now();
+	            String txnId = t.getTxnId(); // e.g., TXN00012345
+ 	            // Sender transaction (Debit)
+	            Transactions debitTxn = new Transactions();
+	            debitTxn.setAnumber(sourceAccountNo);
+	            debitTxn.setFromAccount(sourceAccountNo);
+	            debitTxn.setToAccount(targetAccountNo);
+	            debitTxn.setTxnId(txnId);
+	            debitTxn.setType("Debit");
+	            debitTxn.setAmount(amount);
+	            debitTxn.setLocalDateTime(currentDateTime);
+	            debitTxn.setMsg("Transferred to " + targetAccountNo);
+	            debitTxn.setCurrentBalance(newSourceBalance);
 
-		        transaction.setType("TRANSFER");
-		        transaction.setAmount(amount);
-		        transaction.setLocalDateTime(currentDateTime);
-		        transaction.setMsg("Transfer to " + targetAccountNo);
-		        transaction.setCurrentBalance(newSourceBalance);
-		        transactionRepo.save(transaction);
+	            // Receiver transaction (Credit)
+	            Transactions creditTxn = new Transactions();
+	            creditTxn.setAnumber(targetAccountNo);
+	            creditTxn.setFromAccount(sourceAccountNo);
+	            creditTxn.setToAccount(targetAccountNo);
+	            creditTxn.setTxnId(txnId);
+	            creditTxn.setType("Credit");
+	            creditTxn.setAmount(amount);
+	            creditTxn.setLocalDateTime(currentDateTime);
+	            creditTxn.setMsg("Received from " + sourceAccountNo);
+	            creditTxn.setCurrentBalance(newTargetBalance);
 
-				// Return a success message or any relevant information
-				return "Transfer successful. "
-						+ "New balance in source account: " + newSourceBalance;
-			} else {
-				// Return an error message if the source account has insufficient balance
-				return "Insufficient balance in source account for transfer. "
-						+ "Current balance: " + sourceBalance;
-			}
-		} else {
-			// Handle the case where either the source or target account is not found
-			return "Source or target account not found.";
-		}
+	            // Save both transactions
+	            transactionRepo.save(debitTxn);
+	            transactionRepo.save(creditTxn);
+
+	            return "Transfer successful. New balance in source account: ₹" + newSourceBalance;
+	        } else {
+	            return "Insufficient balance in source account. Current balance: ₹" + sourceBalance;
+	        }
+	    } else {
+	        return "Source or target account not found.";
+	    }
 	}
 
 //**************************************************************************************************

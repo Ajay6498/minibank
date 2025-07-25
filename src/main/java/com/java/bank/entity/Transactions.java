@@ -16,21 +16,44 @@ public class Transactions {
         System.out.println("Transaction");
     }
 
-    private Long anumber;
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long tid;
 
-    private String txnId; //  New user-friendly 8-digit transaction ID
+    private Long anumber; // Current account (for which this txn is saved/viewed)
 
+    private String txnId; // Unique transaction ID (e.g., TXN00001234)
     private LocalDateTime localDateTime;
-    private String type;
+
+    private String type; // "Credit" or "Debit"
     private Double amount;
-    private String msg;
+    
+    private String msg; // Description (e.g., "Transfer to 1234567890")
     private Double currentBalance;
 
-    public Double getCurrentBalance() {
+    private Long fromAccount; // Sender
+    private Long toAccount;   // Receiver
+    
+    
+    
+
+    public Long getFromAccount() {
+		return fromAccount;
+	}
+
+	public void setFromAccount(Long fromAccount) {
+		this.fromAccount = fromAccount;
+	}
+
+	public Long getToAccount() {
+		return toAccount;
+	}
+
+	public void setToAccount(Long toAccount) {
+		this.toAccount = toAccount;
+	}
+
+	public Double getCurrentBalance() {
 		return currentBalance;
 	}
 
